@@ -1,0 +1,23 @@
+<h2>Your Orders</h2>
+
+{% if orders %}
+  <ul>
+    {% for order in orders %}
+      <li>
+        Order #{{ order.id }} - Status: {{ order.get_status_display }}
+
+        <ul>
+          {% for item in order.items.all %}
+            <li>{{ item.product.name }} — Qty: {{ item.quantity }}</li>
+          {% endfor %}
+        </ul>
+
+        {% if order.status == 'pending' %}
+          <a href="{% url 'cancel_order' order.id %}" onclick="return confirm('Are you sure you want to cancel this order?');">Cancel Order</a>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>You have no orders yet.</p>
+{% endif %}
