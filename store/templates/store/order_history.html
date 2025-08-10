@@ -1,23 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Your Orders{% endblock %}
+
+{% block content %}
 <h2>Your Orders</h2>
 
 {% if orders %}
-  <ul>
+  <div style="display: flex; flex-direction: column; gap: 20px;">
+
     {% for order in orders %}
-      <li>
-        Order #{{ order.id }} - Status: {{ order.get_status_display }}
+    <div style="border: 1px solid #ccc; border-radius: 8px; padding: 15px; background-color: #f9f9f9;">
+      <strong>Order #{{ order.id }}</strong> — Status: 
+      <span style="color: {% if order.status == 'pending' %}orange{% elif order.status == 'canceled' %}red{% else %}green{% endif %}; font-weight: bold;">
+        {{ order.get_status_display }}
+      </span>
 
-        <ul>
-          {% for item in order.items.all %}
-            <li>{{ item.product.name }} — Qty: {{ item.quantity }}</li>
-          {% endfor %}
-        </ul>
+      <ul style="margin-top: 10px;">
+        {% for item in order.items.all %}
+          <li>{{ item.product.name }} — Qty: {{ item.quantity }}</li>
+        {% endfor %}
+      </ul>
 
-        {% if order.status == 'pending' %}
-          <a href="{% url 'cancel_order' order.id %}" onclick="return confirm('Are you sure you want to cancel this order?');">Cancel Order</a>
-        {% endif %}
-      </li>
+      {% if order.status == 'pending' %}
+        <a href="{% url 'cancel_order' order.id %}" onclick="return confirm('Are you sure you want to cancel this order?');" 
+           style="color: white; background-color: #dc3545; padding: 6px 12px; border-radius: 5px; text-decoration: none; font-weight: 600;">
+          Cancel Order
+        </a>
+      {% endif %}
+    </div>
     {% endfor %}
-  </ul>
+
+  </div>
 {% else %}
   <p>You have no orders yet.</p>
 {% endif %}
+{% endblock %}

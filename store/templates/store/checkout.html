@@ -1,12 +1,28 @@
-<form method="POST">
+{% extends "base.html" %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<form method="POST" style="max-width: 600px; margin: 20px auto; padding: 15px; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9;">
     {% csrf_token %}
     {{ form.as_p }}
-    <h4>Order Summary:</h4>
-    <ul>
+    
+    <h4 style="margin-top: 20px; margin-bottom: 15px; font-weight: 600; color: #333;">Order Summary:</h4>
+    
+    <ul style="list-style: none; padding-left: 0;">
         {% for product in products %}
-            {% comment %} <li>{{ product.name }} - Quantity: {{ cart|dict_get:product.id|stringformat:"s" }} - Price: {{ product.price }}</li> {% endcomment %}
+            {% comment %} 
+            <li style="padding: 8px 10px; border-bottom: 1px solid #eee;">
+                {{ product.name }} - Quantity: {{ cart|dict_get:product.id|stringformat:"s" }} - Price: {{ product.price }}
+            </li> 
+            {% endcomment %}
         {% endfor %}
     </ul>
-    <p><strong>Total: </strong>{{ order_total }}</p>
-    <button type="submit">Place Order</button>
+    
+    <p style="font-weight: 700; font-size: 1.1em;">Total: {{ order_total }}</p>
+    
+    <button type="submit" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        Place Order
+    </button>
 </form>
+{% endblock %}

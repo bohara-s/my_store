@@ -1,10 +1,17 @@
-<h2>Payment Details</h2>
+{% extends "base.html" %}
+{% block title %}Payment Info{% endblock %}
 
-<p>Account Name: {{ payment_info.account_name }}</p>
-<p>Account Number: {{ payment_info.account_number }}</p>
-<p>Bank Name: {{ payment_info.bank_name }}</p>
+{% block content %}
+<h2 class="mb-4">Payment Details</h2>
+<div class="card p-4 shadow-sm mx-auto" style="max-width: 400px;">
+  <p><strong>Account Name:</strong> {{ payment_info.account_name }}</p>
+  <p><strong>Account Number:</strong> {{ payment_info.account_number }}</p>
+  <p><strong>Bank Name:</strong> {{ payment_info.bank_name }}</p>
 
-{% if payment_info.qr_code %}
-    <img src="{{ payment_info.qr_code.url }}" alt="QR Code" style="max-width:200px;">
-{% endif %}
-
+  {% if payment_info.qr_code %}
+    <div class="text-center mt-4">
+      <img src="{{ payment_info.qr_code.url }}" alt="QR Code" class="img-fluid" style="max-width: 200px;"/>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

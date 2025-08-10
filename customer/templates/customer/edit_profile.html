@@ -1,3 +1,64 @@
+<style>
+  .form-group label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="file"],
+  textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+  }
+
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="file"]:focus,
+  textarea:focus {
+    border-color: #198754; /* bootstrap green */
+    outline: none;
+  }
+
+  .btn-success {
+    background-color: #198754;
+    border: none;
+    padding: 10px 18px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+  }
+
+  .btn-success:hover {
+    background-color: #157347;
+  }
+
+  .btn-secondary {
+    padding: 10px 18px;
+    font-size: 16px;
+    border-radius: 6px;
+    color: #333;
+    background-color: #e2e6ea;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+
+  .btn-secondary:hover {
+    background-color: #cdd3d8;
+  }
+
+  img.mb-2 {
+    border-radius: 50%;
+    object-fit: cover;
+  }
+</style>
 <div class="container mt-4">
     <h3>Edit Profile</h3>
     <form method="POST" enctype="multipart/form-data">
