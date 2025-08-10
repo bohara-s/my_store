@@ -47,3 +47,15 @@ class OrderItem(models.Model):
     def __str__(self):
         return f"{self.quantity} x {self.product.name}"
 
+
+
+from django.db import models
+
+class PaymentInfo(models.Model):
+    account_name = models.CharField(max_length=100)
+    account_number = models.CharField(max_length=50)
+    bank_name = models.CharField(max_length=100)
+    qr_code = models.ImageField(upload_to='payment_qr/')
+    
+    def __str__(self):
+        return f'{self.bank_name} - {self.account_name}'

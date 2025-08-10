@@ -1,12 +1,10 @@
-<!-- store/templates/store/payment_info.html -->
+<h2>Payment Details</h2>
 
-<h2>Payment Information</h2>
+<p>Account Name: {{ payment_info.account_name }}</p>
+<p>Account Number: {{ payment_info.account_number }}</p>
+<p>Bank Name: {{ payment_info.bank_name }}</p>
 
-<p><strong>Account Name:</strong> {{ account_name }}</p>
-<p><strong>Account Number:</strong> {{ account_number }}</p>
-<p><strong>Bank Name:</strong> {{ bank_name }}</p>
+{% if payment_info.qr_code %}
+    <img src="{{ payment_info.qr_code.url }}" alt="QR Code" style="max-width:200px;">
+{% endif %}
 
-<h3>Scan this QR Code to Pay</h3>
-<img src="{{ qr_code_url }}" alt="Payment QR Code" style="max-width: 300px; height: auto;">
-
-<a href="{% url 'order_history' %}">Back to Orders</a>

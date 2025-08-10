@@ -3,11 +3,19 @@ from .models import Product,Order
 from .models import OrderItem
 from .forms import CheckoutForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
+
 
 
 
 def home(request):
     return render(request, 'store/home.html')
+
+def admin_required(view_func):
+    decorated_view_func = user_passes_test(
+        lambda u: u.is_active and u.is_staff
+    )(view_func)
+    return decorated_view_func
 
 def product_list(request):
     products = Product.objects.all()
@@ -33,32 +41,37 @@ def buy_now(request, product_id):
     request.session['cart'] = cart
     return redirect('checkout')  # Checkout page URL name राख्नुहोस
 
+@login_required
 def checkout(request):
-    cart = request.session.get('cart', [])
+    cart = request.session.get('cart', [])  # list of product IDs
+
     products = Product.objects.filter(id__in=cart)
+
     total_price = sum(product.price for product in products)
 
     if request.method == 'POST':
         form = CheckoutForm(request.POST)
         if form.is_valid():
             order = form.save(commit=False)
-            if request.user.is_authenticated:
-                order.user = request.user
+            order.user = request.user
             order.total_price = total_price
             order.save()
 
             for product in products:
                 OrderItem.objects.create(order=order, product=product, quantity=1)
 
-            request.session['cart'] = []
+            request.session['cart'] = []  # clear cart after order
+
             return redirect('order_confirmation', order_id=order.id)
-        else:
-            # form invalid - don't use 'order' here
-            pass
     else:
         form = CheckoutForm()
 
-    return render(request, 'store/checkout.html', {'form': form, 'products': products, 'total_price': total_price})
+    return render(request, 'store/checkout.html', {
+        'form': form,
+        'products': products,
+        'total_price': total_price,
+    })
+
 
     cart = request.session.get('cart', [])
     products = Product.objects.filter(id__in=cart)
@@ -99,23 +112,25 @@ def order_history(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'store/order_history.html', {'orders': orders})
 
-@login_required
+@admin_required
 def cancel_order(request, order_id):
-    order = get_object_or_404(Order, id=order_id, user=request.user)
-    if order.status == 'pending':
-        order.status = 'cancelled'
+    order = get_object_or_404(Order, id=order_id)
+    if request.method == 'POST':
+        order.is_canceled = True
+        order.canceled_at = timezone.now()
         order.save()
-    return redirect('order_history')
+        messages.success(request, 'Order cancelled successfully.')
+        return redirect('order_list')
+    return render(request, 'store/cancel_order_confirm.html', {'order': order})
 
 
+# store/views.py
+from django.shortcuts import render
+from .models import PaymentInfo
 
-@login_required
-def payment_info(request):
-    # Store account details hardcoded or from settings
+def payment_info_view(request):
+    payment_info = PaymentInfo.objects.first()  # Assume one payment info only
     context = {
-        'account_name': 'My Store Pvt. Ltd.',
-        'account_number': '1234567890',
-        'bank_name': 'Nepal Bank Ltd.',
-        'qr_code_url': '/static/img/payment-qr.png',  # QR image file path in static folder
+        'payment_info': payment_info
     }
     return render(request, 'store/payment_info.html', context)
