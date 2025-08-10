@@ -1,0 +1,12 @@
+<!-- store/templates/store/payment_info.html -->
+
+<h2>Payment Information</h2>
+
+<p><strong>Account Name:</strong> {{ account_name }}</p>
+<p><strong>Account Number:</strong> {{ account_number }}</p>
+<p><strong>Bank Name:</strong> {{ bank_name }}</p>
+
+<h3>Scan this QR Code to Pay</h3>
+<img src="{{ qr_code_url }}" alt="Payment QR Code" style="max-width: 300px; height: auto;">
+
+<a href="{% url 'order_history' %}">Back to Orders</a>

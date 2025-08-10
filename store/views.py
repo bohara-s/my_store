@@ -106,3 +106,16 @@ def cancel_order(request, order_id):
         order.status = 'cancelled'
         order.save()
     return redirect('order_history')
+
+
+
+@login_required
+def payment_info(request):
+    # Store account details hardcoded or from settings
+    context = {
+        'account_name': 'My Store Pvt. Ltd.',
+        'account_number': '1234567890',
+        'bank_name': 'Nepal Bank Ltd.',
+        'qr_code_url': '/static/img/payment-qr.png',  # QR image file path in static folder
+    }
+    return render(request, 'store/payment_info.html', context)
